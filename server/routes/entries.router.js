@@ -28,6 +28,20 @@ router.post('/', (req, res) => {
       console.log('Error in POST /entry:', error);
       res.sendStatus(500);
     })
+});
+
+router.delete('/:id', (req, res) => {
+  pool.query(`
+    DELETE FROM "entries"
+    WHERE "id" = $1;
+  `, [req.params.id])
+    .then(() => {
+      res.sendStatus(200);
+    })
+    .catch((error) => {
+      console.log('Error in DELETE /entry:', error);
+      res.sendStatus(500);
+    })
 })
 
 module.exports = router;
