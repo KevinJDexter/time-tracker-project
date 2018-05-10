@@ -28,8 +28,11 @@
   <script src="scripts/services/project.service.js"></script>
 
 </head>
-<body>
+<body ng-app="TaskTrackerApp">
   <h1>WELCOME</h1>
+  <ng-include src="'views/navigation.html'"></ng-include>
+
+  <main ng-view></main>
 
 </body>
 </html>
