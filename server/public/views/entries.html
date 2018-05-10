@@ -3,7 +3,9 @@
     <h2>Add Entry</h2>
     <form>
       <md-input-container style="width: 100%">
-        <span><input type="text" ng-model="vm.newEntry.name" placeholder="What did you do?" /></span>
+        <span>
+          <input type="text" ng-model="vm.newEntry.name" placeholder="What did you do?" />
+        </span>
       </md-input-container>
       <br />
       <md-input-container>
@@ -11,8 +13,10 @@
           <md-option ng-repeat="project in vm.projects.list" ng-value="project.id">{{project.name}}</md-option>
         </md-select>
       </md-input-container>
-      <label>Date:</label>
-      <md-datepicker ng-model="vm.newEntry.date"></md-datepicker>
+      <md-input-container>
+        <label>Date:</label>
+        <md-datepicker ng-model="vm.newEntry.date"></md-datepicker>
+      </md-input-container>
       <md-input-container>
         <label>Start Time:</label>
         <input type="time" ng-model="vm.newEntry.start_time" />
@@ -21,7 +25,7 @@
         <label>End Time:</label>
         <input type="time" ng-model="vm.newEntry.end_time" />
       </md-input-container>
-        <input type="submit" ng-click="vm.addEntry()" />
+      <input type="submit" ng-click="vm.addEntry()" />
     </form>
   </md-divider>
   <md-divider style="width: 80%" layout="column" layout-align="center center">
@@ -42,7 +46,9 @@
           <td>{{entry.project_name}}</td>
           <td>{{entry.date}}</td>
           <td>{{vm.getHours(entry)}}</td>
-          <td><button ng-click="vm.deleteEntry(entry)">DELETE</button></td>
+          <td>
+            <button ng-click="vm.deleteEntry(entry)">DELETE</button>
+          </td>
         </tr>
       </tbody>
     </table>
