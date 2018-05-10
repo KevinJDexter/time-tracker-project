@@ -19,11 +19,11 @@
       </md-input-container>
       <md-input-container>
         <label>Start Time:</label>
-        <input type="time" ng-model="vm.newEntry.start_time" />
+        <input type="time" id="startTime" />
       </md-input-container>
       <md-input-container>
         <label>End Time:</label>
-        <input type="time" ng-model="vm.newEntry.end_time" />
+        <input type="time" id="endTime" />
       </md-input-container>
       <input type="submit" ng-click="vm.addEntry()" />
     </form>
@@ -54,3 +54,5 @@
     </table>
   </md-divider>
 </div>
+<hr />
+<pre>{{vm | json}}</pre>

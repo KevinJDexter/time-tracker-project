@@ -47,11 +47,37 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
         self.addProjectNamesToEntries();
       })
       .catch(function (error) {
-        $mdDialos.show(
+        $mdDialog.show(
           $mdDialog.alert()
             .title('500 Error')
             .textContent('Something went wrong on our server. We are looking into it, and apologize for the inconvenience.')
             .ok('Ok')
+        )
+      })
+  }
+
+  self.addEntry = function () {
+    self.newEntry.start_time = document.getElementById('startTime').value;
+    self.newEntry.end_time = document.getElementById('endTime').value;
+    $http({
+      method: 'POST',
+      url: '/entry',
+      data: self.newEntry
+    })
+      .then(function () {
+        self.getEntries();
+        self.clearNewEntry();
+        $mdToast.show(
+          $mdToast.simple()
+            .textContent('New entry added!')
+        )
+      })
+      .catch(function (error) {
+        $mdDialog.show(
+          $mdDialog.alert()
+            .title('500 Error')
+            .textContent('Something went wrong on our server. We are looking into it, and apologize for the inconvenience.')
+            .ok('ok')
         )
       })
   }
@@ -67,6 +93,7 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
     }
   }
 
+  // Calculates difference between start and end times
   self.getHours = function () {
     self.entries.list.forEach(entry => {
       let start = entry.start_time.split(':').map(x => Number(x));
@@ -75,8 +102,16 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
       let endHours = end[0] + end[1] / 60;
       let difference = Math.round((endHours - startHours) * 2) / 2;
       entry.hours = difference;
-      console.log(difference);
     });
+  }
+
+  // resets input fields for new entries
+  self.clearNewEntry = function () {
+    self.newEntry.name = '';
+    self.newEntry.project_id = null;
+    self.newEntry.date = '';
+    self.newEntry.start_time = '';
+    self.newEntry.end_time = '';
   }
 
 }])
