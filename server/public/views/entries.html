@@ -44,8 +44,8 @@
         <tr ng-repeat="entry in vm.entries.list">
           <td>{{entry.name}}</td>
           <td>{{entry.project_name}}</td>
-          <td>{{entry.date}}</td>
-          <td>{{vm.getHours(entry)}}</td>
+          <td>{{entry.date | date: "MMM d, yyyy"}}</td>
+          <td>{{entry.hours}}</td>
           <td>
             <button ng-click="vm.deleteEntry(entry)">DELETE</button>
           </td>

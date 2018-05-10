@@ -24,6 +24,7 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
       .then(function (response) {
         self.entries.list = response.data;
         self.addProjectNamesToEntries();
+        self.getHours();
       })
       .catch(function (error) {
         $mdDialog.show(
@@ -43,6 +44,7 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
     })
       .then(function (response) {
         self.projects.list = response.data;
+        self.addProjectNamesToEntries();
       })
       .catch(function (error) {
         $mdDialos.show(
@@ -57,17 +59,24 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
   // If there are entries, waits until projects are loaded
   // Pairs each entry up with whatever project id it connects to
   self.addProjectNamesToEntries = function () {
-    if (self.entries.list.length == 0) {
-      return false;
-    }
-    if (self.projects.list.length == 0) {
-      setTimeout(self.addProjectNamesToEntries(), 500);
-    } else {
+    if (self.projects.list.length != 0) {
       self.entries.list.forEach(entry => {
         let project = self.projects.list.find(project => project.id === entry.project_id);
         entry.project_name = project.name;
       });
     }
+  }
+
+  self.getHours = function () {
+    self.entries.list.forEach(entry => {
+      let start = entry.start_time.split(':').map(x => Number(x));
+      let end = entry.end_time.split(':').map(x => Number(x));
+      let startHours = start[0] + start[1] / 60;
+      let endHours = end[0] + end[1] / 60;
+      let difference = Math.round((endHours - startHours) * 2) / 2;
+      entry.hours = difference;
+      console.log(difference);
+    });
   }
 
 }])
