@@ -56,9 +56,17 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
       })
   }
 
+  // Adds new entry to database
   self.addEntry = function () {
     self.newEntry.start_time = document.getElementById('startTime').value;
     self.newEntry.end_time = document.getElementById('endTime').value;
+    if (!self.entryReady()) {
+      $mdToast.show(
+        $mdToast.simple()
+          .textContent('Must fill all fields to submit')
+      )
+      return false;
+    }
     $http({
       method: 'POST',
       url: '/entry',
@@ -103,6 +111,24 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
       let difference = Math.round((endHours - startHours) * 2) / 2;
       entry.hours = difference;
     });
+  }
+
+  // Checks if entry is ready
+  self.entryReady = function () {
+    let isReady = self.newEntry;
+    if (isReady.name == '') {
+      return false;
+    } else if (isReady.project_id == null) {
+      return false;
+    } else if (isReady.date == '') {
+      return false;
+    } else if (isReady.start_time == '') {
+      return false;
+    } else if (isReady.end_time == '') {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   // resets input fields for new entries
