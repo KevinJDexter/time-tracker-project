@@ -8,8 +8,6 @@ app.controller('EntryController', ['ProjectService', function(ProjectService) {
 
   self.newEntry = ProjectService.newEntry;
 
-  self.getHours = ProjectService.getHours;
-
   self.addEntry = ProjectService.addEntry;
   self.deleteEntry = ProjectService.deleteEntry;
   self.getEntries = ProjectService.getEntries;

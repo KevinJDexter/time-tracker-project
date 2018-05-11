@@ -16,7 +16,6 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
 
   // Gets all entries from server
   self.getEntries = function () {
-    console.log('get entries');
     $http({
       method: 'GET',
       url: '/entry'
@@ -72,7 +71,7 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
       url: '/entry',
       data: self.newEntry
     })
-      .then(function () {
+      .then(function (response) {
         self.getEntries();
         self.clearNewEntry();
         $mdToast.show(
@@ -89,6 +88,46 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
         )
       })
   }
+
+  //Removes entry from database
+  self.deleteEntry = function(entry) {
+    $mdDialog.show(
+      $mdDialog.confirm()
+        .title('Are you sure? You can\'t undo this delete.')
+        .textContent(`You are deleting the entry: ${entry.name}`)
+        .ok('Yes, Delete this entry')
+        .cancel('nevermind, don\'t delete')
+    )
+      .then(function() {
+        $http({
+          method: 'DELETE',
+          url: `/entry/${entry.id}`
+        })
+          .then(function(response) {
+            self.getEntries();
+            $mdToast.show(
+              $mdToast.simple()
+                .textContent('Entry deleted')
+            )
+          })
+          .catch(function(error) {
+            $mdDialog.show(
+              $mdDialog.alert()
+                .title('500 Error')
+                .textContent('Something went wrong on our server. We are looking into it, and apologize for the inconvenience')
+                .ok('ok')
+            )
+          })
+      }, function() {
+        $mdToast.show(
+          $mdToast.simple()
+            .textContent('Canceled delete')
+        )
+      })
+
+    
+  }
+
 
   // If there are entries, waits until projects are loaded
   // Pairs each entry up with whatever project id it connects to
