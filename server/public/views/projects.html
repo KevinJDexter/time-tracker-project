@@ -8,7 +8,7 @@
       <input type="submit" ng-click="vm.addProject()" />
     </form>
   </md-divider>
-  <md-divider>
+  <md-divider style="width: 80%" layout="column" layout-align="center center">
     <h3>Projects</h3>
     <table style="width:100%">
       <thead>
@@ -20,9 +20,10 @@
       </thead>
       <tbody>
         <tr ng-repeat="project in vm.projects.list">
-          <td>{{project.name}}</td>
+          <td><input type="text" ng-model="project.name"></td>
           <td>{{project.hours}}</td>
           <td>
+            <button ng-click="vm.editProject(project)">UPDATE</button>
             <button ng-click="vm.deleteProject(project)">DELETE</button>
           </td>
         </tr>

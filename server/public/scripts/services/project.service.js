@@ -194,6 +194,43 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
       })
   }
 
+  // Updates project name
+  self.editProject = function (project) {
+    $mdDialog.show(
+      $mdDialog.confirm()
+        .title('Are you sure?')
+        .textContent('You are changing a project name.')
+        .ok('Yes')
+        .cancel('No')
+    )
+      .then(function() {
+        $http({
+          method: 'PUT',
+          url: `/project/${project.id}`,
+          data: project
+        })
+          .then(function(response) {
+            $mdToast.show(
+              $mdToast.simple()
+                .textContent('Project name updated')
+            )
+          })
+          .catch(function(error) {
+            $mdDialog.show(
+              $mdDialog.alert()
+                .title('500 Error')
+                .textContent('Something went wrong on our server. We are looking into it, and apologize for the inconvenience')
+                .ok('ok')
+            )
+          })
+      }, function() {
+        $mdToast.show(
+          $mdToast.simple()
+            .textContent('Canceled update')
+        )
+      })
+  }
+
 
   // If there are entries, waits until projects are loaded
   // Pairs each entry up with whatever project id it connects to

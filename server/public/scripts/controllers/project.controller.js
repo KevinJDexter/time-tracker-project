@@ -10,6 +10,7 @@ app.controller('ProjectController', ['ProjectService', function(ProjectService) 
   self.deleteProject = ProjectService.deleteProject;
   self.getProjects = ProjectService.getProjects;
   self.getEntries = ProjectService.getEntries;
+  self.editProject = ProjectService.editProject;
 
   self.init = function() {
     self.getProjects();
