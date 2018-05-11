@@ -79,6 +79,31 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
       return false;
     }
     self.getHoursForEntry();
+    let checkOverlap = self.checkForOverlap();
+    console.log(checkOverlap);
+    if (checkOverlap.conflicts == 0) {
+      self.ajaxForPostEntry();
+    } else {
+      $mdDialog.show(
+        $mdDialog.confirm()
+          .title('Conflict detected')
+          .textContent('Are you okay adding a post with a time conflict?')
+          .ok('Yes')
+          .cancel('No')
+      )
+        .then(function() {
+          self.ajaxForPostEntry();
+        }, function() {
+          $mdToast.show(
+            $mdToast.simple()
+              .textContent('Cancelled entry')
+          )
+        })
+    }
+    
+  }
+
+  self.ajaxForPostEntry = function() {
     $http({
       method: 'POST',
       url: '/entry',
@@ -251,6 +276,30 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
       return false;
     }
     self.getHoursForEntry();
+    let checkOverlap = self.checkForOverlap()
+    if (checkOverlap.conflicts == 0) {
+      self.ajaxForUpdateEntry();
+    } else {
+      $mdDialog.show(
+        $mdDialog.confirm()
+          .title('Conflict detected')
+          .textContent('Are you okay adding a post with a time conflict?')
+          .ok('Yes')
+          .cancel('No')
+      )
+        .then(function() {
+          self.ajaxForUpdateEntry();
+        }, function() {
+          $mdToast.show(
+            $mdToast.simple()
+              .textContent('Cancelled entry')
+          )
+        })
+    }
+    
+  }
+
+  self.ajaxForUpdateEntry = function () {
     $http({
       method: 'PUT',
       url: `/entry/${self.updateEntry.id}`,
@@ -381,6 +430,54 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
       entries.splice(index, 1);
     }
     self.entries.list = newEntries;
+  }
+
+  self.checkForOverlap = function () {
+    allEntries = self.entries.list.map(x => x);
+    let newDate;
+    let results = {
+      conflicts: 0,
+      lastConflict: {}
+    }
+    if (self.editActive.active) {
+      newDate = self.newEntry.date.substr(0, 10);
+    } else {
+      newDate = self.formatDate(self.newEntry.date)
+    }
+    self.entries.list.forEach(entry => {
+      if (entry.id == self.updateEntry.id) {
+        console.log('match');
+      } else {
+        let oldDate = entry.date.substr(0, 10);
+        if (oldDate == newDate
+          && (entry.start_time < self.newEntry.start_time
+            && entry.end_time > self.newEntry.start_time
+            || entry.start_time < self.newEntry.end_time
+            && entry.end_time > self.newEntry.end_time
+            || entry.start_time > self.newEntry.start_time
+            && entry.end_time < self.newEntry.end_time)) {
+          results.conflicts++;
+          results.lastConflict = entry;
+        };
+      };
+    });
+    return results;
+  }
+
+  self.checkIndividualOverlap = function (entry, newDate) {
+
+  }
+
+  self.formatDate = function (date) {
+    let month = String(date.getMonth() + 1);
+    let year = String(date.getFullYear());
+    let day = String(date.getDate());
+
+    if (month.length < 2) { month = '0' + month; }
+    if (day.length < 2) { day = '0' + day; }
+
+    let newDate = `${year}-${month}-${day}`;
+    return newDate;
   }
 
 }])
