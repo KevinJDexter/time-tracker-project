@@ -97,20 +97,20 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
   }
 
   // Adds a new project to the database
-  self.addProject = function() {
+  self.addProject = function () {
     $http({
       method: 'POST',
       url: '/project',
       data: self.newProject
     })
-      .then(function(response) {
+      .then(function (response) {
         self.getProjects();
         $mdToast.show(
           $mdToast.simple()
             .textContent('New project added!')
         )
       })
-      .catch(function(error) {
+      .catch(function (error) {
         $mdDialog.show(
           $mdDialog.alert()
             .title('500 Error')
@@ -121,7 +121,7 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
   }
 
   //Removes entry from database
-  self.deleteEntry = function(entry) {
+  self.deleteEntry = function (entry) {
     $mdDialog.show(
       $mdDialog.confirm()
         .title('Are you sure? You can\'t undo this delete.')
@@ -129,19 +129,19 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
         .ok('Yes, Delete this entry')
         .cancel('Nevermind, don\'t delete')
     )
-      .then(function() {
+      .then(function () {
         $http({
           method: 'DELETE',
           url: `/entry/${entry.id}`
         })
-          .then(function(response) {
+          .then(function (response) {
             self.getEntries();
             $mdToast.show(
               $mdToast.simple()
                 .textContent('Entry deleted')
             )
           })
-          .catch(function(error) {
+          .catch(function (error) {
             $mdDialog.show(
               $mdDialog.alert()
                 .title('500 Error')
@@ -149,7 +149,7 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
                 .ok('ok')
             )
           })
-      }, function() {
+      }, function () {
         $mdToast.show(
           $mdToast.simple()
             .textContent('Canceled delete')
@@ -166,19 +166,19 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
         .ok('Yes, Delete this project')
         .cancel('Nevermind, don\'t delete')
     )
-      .then(function() {
+      .then(function () {
         $http({
           method: 'DELETE',
           url: `/project/${project.id}`
         })
-          .then(function(response) {
+          .then(function (response) {
             self.getProjects();
             $mdToast.show(
               $mdToast.simple()
                 .textContent('Project deleted')
             )
           })
-          .catch(function(error) {
+          .catch(function (error) {
             $mdDialog.show(
               $mdDialog.alert()
                 .title('500 Error')
@@ -186,7 +186,7 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
                 .ok('Ok')
             )
           })
-      }, function() {
+      }, function () {
         $mdToast.show(
           $mdToast.simple()
             .textContent('Canceled delete')
@@ -203,19 +203,19 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
         .ok('Yes')
         .cancel('No')
     )
-      .then(function() {
+      .then(function () {
         $http({
           method: 'PUT',
           url: `/project/${project.id}`,
           data: project
         })
-          .then(function(response) {
+          .then(function (response) {
             $mdToast.show(
               $mdToast.simple()
                 .textContent('Project name updated')
             )
           })
-          .catch(function(error) {
+          .catch(function (error) {
             $mdDialog.show(
               $mdDialog.alert()
                 .title('500 Error')
@@ -223,7 +223,7 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
                 .ok('ok')
             )
           })
-      }, function() {
+      }, function () {
         $mdToast.show(
           $mdToast.simple()
             .textContent('Canceled update')
@@ -245,12 +245,12 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
 
   // Calculates difference between start and end times
   self.getHoursForEntry = function () {
-      let start = self.newEntry.start_time.split(':').map(x => Number(x));
-      let end = self.newEntry.end_time.split(':').map(x => Number(x));
-      let startHours = start[0] + start[1] / 60;
-      let endHours = end[0] + end[1] / 60;
-      let difference = Math.round((endHours - startHours) * 2) / 2;
-      self.newEntry.hours = difference;
+    let start = self.newEntry.start_time.split(':').map(x => Number(x));
+    let end = self.newEntry.end_time.split(':').map(x => Number(x));
+    let startHours = start[0] + start[1] / 60;
+    let endHours = end[0] + end[1] / 60;
+    let difference = Math.round((endHours - startHours) * 2) / 2;
+    self.newEntry.hours = difference;
   }
 
   // Popoulates Hours field of the projects using Entry hours
@@ -289,6 +289,35 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
     self.newEntry.date = '';
     self.newEntry.start_time = '';
     self.newEntry.end_time = '';
+  }
+
+  // Sorts the table based on selected column
+  self.sortTable = function (sortRule) {
+    let entries;
+    let oldEntries = self.entries.list.map(x => x);
+    let newEntries = [];
+    if (sortRule == 0) {
+      entries = self.entries.list.map(x => x.name);
+    } else if (sortRule == 1) {
+      entries = self.entries.list.map(x => x.project_name);
+    } else if (sortRule == 2) {
+      entries = self.entries.list.map(x => x.date);
+    } else if (sortRule == 3) {
+      entries = self.entries.list.map(x => x.hours);
+    }
+    while(entries.length > 0) {
+      let min = entries[0];
+      let index = 0;
+      for (let i = 1; i < entries.length; i++) {
+        if (min > entries[i]) {
+          min = entries[i];
+          index = i;
+        }
+      }
+      newEntries.push(oldEntries.splice(index, 1)[0]);
+      entries.splice(index, 1);
+    }
+    self.entries.list = newEntries;
   }
 
 }])

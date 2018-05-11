@@ -13,6 +13,8 @@ app.controller('EntryController', ['ProjectService', function(ProjectService) {
   self.getEntries = ProjectService.getEntries;
   self.getProjects = ProjectService.getProjects;
 
+  self.sortTable = ProjectService.sortTable;
+
   self.init = function () {
     self.getEntries();
     self.getProjects();
