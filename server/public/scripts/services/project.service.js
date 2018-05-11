@@ -23,7 +23,6 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
       .then(function (response) {
         self.entries.list = response.data;
         self.addProjectNamesToEntries();
-        self.getHours();
       })
       .catch(function (error) {
         $mdDialog.show(
@@ -66,6 +65,7 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
       )
       return false;
     }
+    self.getHours();
     $http({
       method: 'POST',
       url: '/entry',
@@ -142,14 +142,12 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
 
   // Calculates difference between start and end times
   self.getHours = function () {
-    self.entries.list.forEach(entry => {
-      let start = entry.start_time.split(':').map(x => Number(x));
-      let end = entry.end_time.split(':').map(x => Number(x));
+      let start = self.newEntry.start_time.split(':').map(x => Number(x));
+      let end = self.newEntry.end_time.split(':').map(x => Number(x));
       let startHours = start[0] + start[1] / 60;
       let endHours = end[0] + end[1] / 60;
       let difference = Math.round((endHours - startHours) * 2) / 2;
-      entry.hours = difference;
-    });
+      self.newEntry.hours = difference;
   }
 
   // Checks if entry is ready

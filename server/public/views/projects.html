@@ -1,3 +1,32 @@
-<div>
-  PROJECTS
+<div layout="column" layout-align="center center">
+  <md-divider style="width: 80%" layout="column" layout-align="center center">
+    <h2>Add Project</h2>
+    <form style="width: 80%">
+      <md-input-container style="width: 80%">
+        <input type="text" ng-model="vm.newProject.name" placeholder="Project name" />
+      </md-input-container>
+      <input type="submit" ng-click="vm.addProject()" />
+    </form>
+  </md-divider>
+  <md-divider>
+    <h3>Projects</h3>
+    <table style="width:100%">
+      <thead>
+        <tr>
+          <th>Project</th>
+          <th>Total Hours</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="project in vm.projects.list">
+          <td>{{project.name}}</td>
+          <td>{{project.hours}}</td>
+          <td>
+            <button ng-click="vm.deleteProject(project)">DELETE</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </md-divider>
 </div>

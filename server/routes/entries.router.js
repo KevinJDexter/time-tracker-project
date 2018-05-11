@@ -18,9 +18,9 @@ router.post('/', (req, res) => {
   const entry = req.body;
   pool.query(`
     INSERT INTO "entries"
-    ("name", "date", "start_time", "end_time", "project_id")
-    VALUES ($1, $2, $3, $4, $5);
-  `, [entry.name, entry.date, entry.start_time, entry.end_time, entry.project_id])
+    ("name", "date", "start_time", "end_time", "project_id", "hours")
+    VALUES ($1, $2, $3, $4, $5, $6);
+  `, [entry.name, entry.date, entry.start_time, entry.end_time, entry.project_id, entry.hours])
     .then(() => {
       res.sendStatus(202);
     })
