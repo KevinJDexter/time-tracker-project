@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,16 +24,20 @@
   <script src="scripts/controllers/entry.controller.js"></script>
   <script src="scripts/controllers/project.controller.js"></script>
   <script src="scripts/controllers/reports.controller.js"></script>
-  
+
   <!-- Sourcing Services -->
   <script src="scripts/services/project.service.js"></script>
 
 </head>
+
 <body ng-app="TaskTrackerApp">
-  <h1>WELCOME</h1>
+  <header layout="row" layout-align="center center">
+    <h1>WELCOME</h1>
+  </header>
   <ng-include src="'views/navigation.html'"></ng-include>
 
   <main ng-view></main>
 
 </body>
+
 </html>
