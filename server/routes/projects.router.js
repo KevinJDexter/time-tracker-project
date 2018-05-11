@@ -43,4 +43,19 @@ router.delete('/:id', (req, res) => {
     })
 })
 
+router.put('/:id', (req, res) => {
+  pool.query(`
+    UPDATE "projects"
+    SET "name" = $1
+    WHERE "id" = $2
+  `, [req.body.name, req.params.id])
+    .then(() => {
+      res.sendStatus(200);
+    })
+    .catch((error) => {
+      console.log('error in PUT /project', error);
+      res.sendStatus(500);
+    })
+})
+
 module.exports = router;
