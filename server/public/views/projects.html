@@ -10,21 +10,21 @@
   </md-divider>
   <md-divider style="width: 80%" layout="column" layout-align="center center">
     <h3>Projects</h3>
-    <table style="width:100%">
+    <table style="width:80%">
       <thead>
         <tr>
-          <th>Project</th>
-          <th>Total Hours</th>
-          <th>Actions</th>
+          <th class="projectColumn">Project</th>
+          <th class="totalHoursColumn">Total Hours</th>
+          <th class="projectActionsColumn">Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr ng-repeat="project in vm.projects.list">
-          <td><input type="text" ng-model="project.name"></td>
+          <td><input type="text" style="width: 80%" ng-model="project.name"></td>
           <td>{{project.hours}}</td>
           <td>
-            <button ng-click="vm.editProject(project)">UPDATE</button>
-            <button ng-click="vm.deleteProject(project)">DELETE</button>
+            <md-button class="md-primary md-raised md-hue-3" ng-click="vm.editProject(project)">UPDATE</md-button>
+            <md-button class="md-warn md-raised md-hue-2" ng-click="vm.deleteProject(project)">DELETE</md-button>
           </td>
         </tr>
       </tbody>

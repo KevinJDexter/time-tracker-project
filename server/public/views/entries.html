@@ -31,11 +31,11 @@
     <table style="width: 100%">
       <thead>
         <tr>
-          <th ng-click="vm.sortTable(0)">Entry</th>
-          <th ng-click="vm.sortTable(1)">Project</th>
-          <th ng-click="vm.sortTable(2)">Date</th>
-          <th ng-click="vm.sortTable(3)">Hours</th>
-          <th>Actions</th>
+          <th ng-click="vm.sortTable(0)" class="entryColumn">Entry</th>
+          <th ng-click="vm.sortTable(1)" class="projectNameColumn">Project</th>
+          <th ng-click="vm.sortTable(2)" class="dateColumn">Date</th>
+          <th ng-click="vm.sortTable(3)" class="hoursColumn">Hours</th>
+          <th class="entryActionsColumn">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -45,7 +45,7 @@
           <td>{{entry.date | date: "MMM d, yyyy"}}</td>
           <td>{{entry.hours}}</td>
           <td>
-            <button ng-click="vm.deleteEntry(entry)">DELETE</button>
+            <md-button class="md-warn md-hue-2 md-raised" ng-click="vm.deleteEntry(entry)">DELETE</md-button>
           </td>
         </tr>
       </tbody>

@@ -1,0 +1,45 @@
+tr, td {
+  border: 1px solid grey;
+  border-collapse: collapse;
+}
+
+table, th {
+  border: 2px solid black;
+  border-collapse: collapse;
+}
+
+.entryColumn {
+  width: 30%;
+}
+
+.projectNameColumn {
+  width: 30%;
+}
+
+.dateColumn {
+  width: 15%;
+}
+
+.hoursColumn {
+  width: 5%;
+}
+
+.entryActionsColumn {
+  width: 20%;
+}
+
+.projectColumn {
+  width: 70%;
+}
+
+.totalHoursColumn {
+  width: 10%;
+}
+
+.projectActionsColumn {
+  width: 20%;
+}
+
+table tr th, table tr td {
+  text-align: center;
+}
