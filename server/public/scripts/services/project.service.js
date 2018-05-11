@@ -96,6 +96,7 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
       })
   }
 
+  // Adds a new project to the database
   self.addProject = function() {
     $http({
       method: 'POST',
@@ -126,7 +127,7 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
         .title('Are you sure? You can\'t undo this delete.')
         .textContent(`You are deleting the entry: ${entry.name}`)
         .ok('Yes, Delete this entry')
-        .cancel('nevermind, don\'t delete')
+        .cancel('Nevermind, don\'t delete')
     )
       .then(function() {
         $http({
@@ -154,8 +155,43 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
             .textContent('Canceled delete')
         )
       })
+  }
 
-    
+  // Removes project from database (all related entries as well)
+  self.deleteProject = function (project) {
+    $mdDialog.show(
+      $mdDialog.confirm()
+        .title('Are you sure? you can\'t undo this delete.')
+        .textContent(`You are deleting the project and all it's entries: ${project.name}`)
+        .ok('Yes, Delete this project')
+        .cancel('Nevermind, don\'t delete')
+    )
+      .then(function() {
+        $http({
+          method: 'DELETE',
+          url: `/project/${project.id}`
+        })
+          .then(function(response) {
+            self.getProjects();
+            $mdToast.show(
+              $mdToast.simple()
+                .textContent('Project deleted')
+            )
+          })
+          .catch(function(error) {
+            $mdDialog.show(
+              $mdDialog.alert()
+                .title('500 Error')
+                .textContent('Something went wrong on our server. We are looking into it, and apologize for the inconvenience')
+                .ok('Ok')
+            )
+          })
+      }, function() {
+        $mdToast.show(
+          $mdToast.simple()
+            .textContent('Canceled delete')
+        )
+      })
   }
 
 
@@ -180,6 +216,7 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
       self.newEntry.hours = difference;
   }
 
+  // Popoulates Hours field of the projects using Entry hours
   self.getHoursForProjects = function () {
     self.projects.list.forEach(project => {
       let projectEntries = self.entries.list.filter(entry => entry.project_id === project.id);
