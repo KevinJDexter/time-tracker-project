@@ -14,6 +14,11 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
     end_time: ''
   }
 
+  self.newProject = {
+    name: '',
+    hours: 0
+  }
+
   // Gets all entries from server
   self.getEntries = function () {
     $http({
@@ -23,6 +28,7 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
       .then(function (response) {
         self.entries.list = response.data;
         self.addProjectNamesToEntries();
+        self.getHoursForProjects();
       })
       .catch(function (error) {
         $mdDialog.show(
@@ -43,6 +49,7 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
       .then(function (response) {
         self.projects.list = response.data;
         self.addProjectNamesToEntries();
+        self.getHoursForProjects();
       })
       .catch(function (error) {
         $mdDialog.show(
@@ -65,7 +72,7 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
       )
       return false;
     }
-    self.getHours();
+    self.getHoursForEntry();
     $http({
       method: 'POST',
       url: '/entry',
@@ -85,6 +92,29 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
             .title('500 Error')
             .textContent('Something went wrong on our server. We are looking into it, and apologize for the inconvenience.')
             .ok('ok')
+        )
+      })
+  }
+
+  self.addProject = function() {
+    $http({
+      method: 'POST',
+      url: '/project',
+      data: self.newProject
+    })
+      .then(function(response) {
+        self.getProjects();
+        $mdToast.show(
+          $mdToast.simple()
+            .textContent('New project added!')
+        )
+      })
+      .catch(function(error) {
+        $mdDialog.show(
+          $mdDialog.alert()
+            .title('500 Error')
+            .textContent('Something went wrong with our server. We are looking into it, and apologize for the inconvenience.')
+            .of('ok')
         )
       })
   }
@@ -141,13 +171,23 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
   }
 
   // Calculates difference between start and end times
-  self.getHours = function () {
+  self.getHoursForEntry = function () {
       let start = self.newEntry.start_time.split(':').map(x => Number(x));
       let end = self.newEntry.end_time.split(':').map(x => Number(x));
       let startHours = start[0] + start[1] / 60;
       let endHours = end[0] + end[1] / 60;
       let difference = Math.round((endHours - startHours) * 2) / 2;
       self.newEntry.hours = difference;
+  }
+
+  self.getHoursForProjects = function () {
+    self.projects.list.forEach(project => {
+      let projectEntries = self.entries.list.filter(entry => entry.project_id === project.id);
+      project.hours = 0;
+      projectEntries.forEach(entry => {
+        project.hours += Number(entry.hours);
+      });
+    });
   }
 
   // Checks if entry is ready
