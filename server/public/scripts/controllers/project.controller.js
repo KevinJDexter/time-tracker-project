@@ -15,6 +15,7 @@ app.controller('ProjectController', ['ProjectService', function(ProjectService) 
   self.init = function() {
     self.getProjects();
     self.getEntries();
+    self.newProject.name = '';
   }
 
   self.init();

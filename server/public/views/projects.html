@@ -5,7 +5,7 @@
       <md-input-container style="width: 80%">
         <input type="text" ng-model="vm.newProject.name" placeholder="Project name" />
       </md-input-container>
-      <input type="submit" ng-click="vm.addProject()" />
+      <md-button ng-click="vm.addProject()" class="md-primary md-raised">Submit</md-button>
     </form>
   </md-divider>
   <md-divider style="width: 80%" layout="column" layout-align="center center">
@@ -20,7 +20,11 @@
       </thead>
       <tbody>
         <tr ng-repeat="project in vm.projects.list">
-          <td><input type="text" style="width: 80%" ng-model="project.name"></td>
+          <td>
+            <md-input-container style="width: 80%">
+              <input type="text" ng-model="project.name">
+            </md-input-container>
+          </td>
           <td>{{project.hours}}</td>
           <td>
             <md-button class="md-primary md-raised md-hue-3" ng-click="vm.editProject(project)">UPDATE</md-button>

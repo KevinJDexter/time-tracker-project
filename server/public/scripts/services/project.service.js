@@ -6,18 +6,24 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
   self.entries = { list: [] };
   self.projects = { list: [] };
 
+  self.editActive = { active: false };
+
   self.newEntry = {
     name: '',
     project_id: null,
     date: '',
     start_time: '',
-    end_time: ''
+    end_time: '',
+    hours: 0,
+    project_name: ''
   }
 
   self.newProject = {
     name: '',
     hours: 0
   }
+
+  self.updateEntry = { id: 0 };
 
   // Gets all entries from server
   self.getEntries = function () {
@@ -109,6 +115,7 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
           $mdToast.simple()
             .textContent('New project added!')
         )
+        self.newProject.name = '';
       })
       .catch(function (error) {
         $mdDialog.show(
@@ -172,6 +179,7 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
           url: `/project/${project.id}`
         })
           .then(function (response) {
+            self.getEntries();
             self.getProjects();
             $mdToast.show(
               $mdToast.simple()
@@ -231,11 +239,63 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
       })
   }
 
+  // Updates entry with new info
+  self.updateEntry = function () {
+    self.newEntry.start_time = document.getElementById('startTime').value;
+    self.newEntry.end_time = document.getElementById('endTime').value;
+    if (!self.entryReady()) {
+      $mdToast.show(
+        $mdToast.simple()
+          .textContent('All fields must be populated to update')
+      )
+      return false;
+    }
+    self.getHoursForEntry();
+    $http({
+      method: 'PUT',
+      url: `/entry/${self.updateEntry.id}`,
+      data: self.newEntry
+    })
+      .then(function (response) {
+        self.getEntries();
+        self.cancelEdit();
+        $mdToast.show(
+          $mdToast.simple()
+            .textContent('Updated entry')
+        )
+      })
+      .catch(function (error) {
+        $mdDialog.show(
+          $mdDialog.alert()
+            .title('500 Error')
+            .textContent('Something went wrong on our server. We are looking into it, and apologize for the inconvenience')
+            .ok('Ok')
+        )
+      })
+  }
+
+  //Allows user to edit posted time entry
+  self.editEntry = function (entry) {
+    self.editActive.active = true;
+    self.newEntry.name = entry.name;
+    self.newEntry.project_id = entry.project_id;
+    document.getElementById('startTime').value = entry.start_time;
+    document.getElementById('endTime').value = entry.end_time;
+    self.newEntry.date = entry.date;
+    self.updateEntry.id = entry.id;
+  }
+
+  // cancels edit and returns to blank entry field
+  self.cancelEdit = function () {
+    self.editActive.active = false;
+    self.updateEntry.id = 0;
+    self.clearNewEntry();
+  }
 
   // If there are entries, waits until projects are loaded
   // Pairs each entry up with whatever project id it connects to
   self.addProjectNamesToEntries = function () {
-    if (self.projects.list.length != 0) {
+    if (self.projects.list.length != 0 && self.entries.list.length != 0) {
       self.entries.list.forEach(entry => {
         let project = self.projects.list.find(project => project.id === entry.project_id);
         entry.project_name = project.name;
@@ -256,16 +316,19 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
   // Popoulates Hours field of the projects using Entry hours
   self.getHoursForProjects = function () {
     self.projects.list.forEach(project => {
-      let projectEntries = self.entries.list.filter(entry => entry.project_id === project.id);
       project.hours = 0;
-      projectEntries.forEach(entry => {
-        project.hours += Number(entry.hours);
-      });
+      if (self.entries.list.length > 0) {
+        let projectEntries = self.entries.list.filter(entry => entry.project_id === project.id);
+        projectEntries.forEach(entry => {
+          project.hours += Number(entry.hours);
+        });
+      }
     });
   }
 
   // Checks if entry is ready
   self.entryReady = function () {
+    console.log(self.newEntry);
     let isReady = self.newEntry;
     if (isReady.name == '') {
       return false;
@@ -287,8 +350,8 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
     self.newEntry.name = '';
     self.newEntry.project_id = null;
     self.newEntry.date = '';
-    self.newEntry.start_time = '';
-    self.newEntry.end_time = '';
+    document.getElementById('startTime').value = '06:00:00';
+    document.getElementById('endTime').value = '08:00:00';
   }
 
   // Sorts the table based on selected column
@@ -305,7 +368,7 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
     } else if (sortRule == 3) {
       entries = self.entries.list.map(x => x.hours);
     }
-    while(entries.length > 0) {
+    while (entries.length > 0) {
       let min = entries[0];
       let index = 0;
       for (let i = 1; i < entries.length; i++) {

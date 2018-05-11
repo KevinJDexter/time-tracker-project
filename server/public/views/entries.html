@@ -1,13 +1,14 @@
 <div layout="column" layout-align="center center">
   <md-divider style="width: 80%" layout="column" layout-align="center center">
-    <h2>Add Entry</h2>
+    <h2 ng-hide="vm.editActive.active">Add Entry</h2>
+    <h2 ng-hide="!vm.editActive.active">Edit Entry</h2>
     <form>
       <md-input-container style="width: 100%">
         <input type="text" ng-model="vm.newEntry.name" placeholder="What did you do?" />
       </md-input-container>
       <br />
       <md-input-container>
-        <md-select ng-model="vm.newEntry.project_id">
+        <md-select ng-model="vm.newEntry.project_id" placeholder="Select project...">
           <md-option ng-repeat="project in vm.projects.list" ng-value="project.id">{{project.name}}</md-option>
         </md-select>
       </md-input-container>
@@ -17,13 +18,17 @@
       </md-input-container>
       <md-input-container>
         <label>Start Time:</label>
-        <input type="time" id="startTime" />
+        <input type="time" id="startTime" value="06:00:00" />
       </md-input-container>
       <md-input-container>
         <label>End Time:</label>
-        <input type="time" id="endTime" />
+        <input type="time" id="endTime" value="08:00:00" />
       </md-input-container>
-      <input type="submit" ng-click="vm.addEntry()" />
+      <md-button ng-hide="vm.editActive.active" ng-click="vm.addEntry()" class="md-primary md-raised">Submit</md-button>
+      <span ng-hide="!vm.editActive.active">
+        <md-button ng-click="vm.updateEntry()" class="md-primary md-raised">Update</md-button>
+        <md-button ng-click="vm.cancelEdit()" class="md-warn md-hue-1 md-raised">Cancel</md-button>
+      </span>
     </form>
   </md-divider>
   <md-divider style="width: 80%" layout="column" layout-align="center center">
@@ -45,6 +50,7 @@
           <td>{{entry.date | date: "MMM d, yyyy"}}</td>
           <td>{{entry.hours}}</td>
           <td>
+            <md-button class="md-primary md-hue-3 md-raised" ng-click="vm.editEntry(entry)">EDIT</md-button>
             <md-button class="md-warn md-hue-2 md-raised" ng-click="vm.deleteEntry(entry)">DELETE</md-button>
           </td>
         </tr>
