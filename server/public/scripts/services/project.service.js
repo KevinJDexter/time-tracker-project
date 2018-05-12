@@ -91,19 +91,19 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
           .ok('Yes')
           .cancel('No')
       )
-        .then(function() {
+        .then(function () {
           self.ajaxForPostEntry();
-        }, function() {
+        }, function () {
           $mdToast.show(
             $mdToast.simple()
               .textContent('Cancelled entry')
           )
         })
     }
-    
+
   }
 
-  self.ajaxForPostEntry = function() {
+  self.ajaxForPostEntry = function () {
     $http({
       method: 'POST',
       url: '/entry',
@@ -287,16 +287,16 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
           .ok('Yes')
           .cancel('No')
       )
-        .then(function() {
+        .then(function () {
           self.ajaxForUpdateEntry();
-        }, function() {
+        }, function () {
           $mdToast.show(
             $mdToast.simple()
               .textContent('Cancelled entry')
           )
         })
     }
-    
+
   }
 
   self.ajaxForUpdateEntry = function () {
@@ -464,10 +464,6 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
     return results;
   }
 
-  self.checkIndividualOverlap = function (entry, newDate) {
-
-  }
-
   self.formatDate = function (date) {
     let month = String(date.getMonth() + 1);
     let year = String(date.getFullYear());
@@ -478,6 +474,57 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
 
     let newDate = `${year}-${month}-${day}`;
     return newDate;
+  }
+
+  self.populateCanvas = function () {
+    if (self.projects.list.length == 0) {
+      setTimeout(self.populateCanvas, 500);
+    } else {
+      let labels = self.projects.list.map(x => x.name);
+      let data = self.projects.list.map(x => x.hours);
+      let cvs = document.getElementById('reports_table');
+      let myChart = new Chart(cvs, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            data: data,
+            borderWidth: 1,
+            backgroundColor: 'grey',
+            borderColor: 'black'
+          }]
+        },
+        options: {
+          title: {
+            display: true,
+            text: 'Hours Commited to Individual Projects',
+            fontSize: 30
+          },
+          legend: {
+            display: false
+          },
+          scales: {
+            xAxes: [{
+              scaleLabel: {
+                display: true,
+                labelString: 'Projects',
+                fontSize: 24
+              }
+            }],
+            yAxes: [{
+              scaleLabel: {
+                display: true,
+                labelString: 'Hours',
+                fontSize: 24
+              },
+              ticks: {
+                beginAtZero: true,
+              }
+            }]
+          }
+        }
+      })
+    }
   }
 
 }])
