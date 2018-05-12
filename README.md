@@ -11,6 +11,7 @@ CREATE TABLE "entries" (
 	"date" DATE,
 	"start_time" TIME,
 	"end_time" TIME,
+	"hours" VARCHAR(10),
 	"project_id" INT REFERENCES "projects" ON DELETE CASCADE
 );
 
