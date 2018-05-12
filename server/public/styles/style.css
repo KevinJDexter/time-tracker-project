@@ -64,3 +64,11 @@ form {
   padding: 0px 100px;
   background-color: rgb(190, 190, 190);
 }
+
+.sort-column:hover {
+  background-color: turquoise;
+}
+
+.sort-column:focus {
+  background-color: yellow;
+}
