@@ -37,12 +37,7 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
         self.getHoursForProjects();
       })
       .catch(function (error) {
-        $mdDialog.show(
-          $mdDialog.alert()
-            .title('500 Error')
-            .textContent('Something went wrong on our server. We are looking into it, and apologize for the inconvenience.')
-            .ok('Ok')
-        )
+        self.reportFiveHundred();
       })
   }
 
@@ -58,12 +53,7 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
         self.getHoursForProjects();
       })
       .catch(function (error) {
-        $mdDialog.show(
-          $mdDialog.alert()
-            .title('500 Error')
-            .textContent('Something went wrong on our server. We are looking into it, and apologize for the inconvenience.')
-            .ok('Ok')
-        )
+        self.reportFiveHundred();
       })
   }
 
@@ -118,12 +108,7 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
         )
       })
       .catch(function (error) {
-        $mdDialog.show(
-          $mdDialog.alert()
-            .title('500 Error')
-            .textContent('Something went wrong on our server. We are looking into it, and apologize for the inconvenience.')
-            .ok('ok')
-        )
+        self.reportFiveHundred();
       })
   }
 
@@ -143,12 +128,7 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
         self.newProject.name = '';
       })
       .catch(function (error) {
-        $mdDialog.show(
-          $mdDialog.alert()
-            .title('500 Error')
-            .textContent('Something went wrong with our server. We are looking into it, and apologize for the inconvenience.')
-            .of('ok')
-        )
+        self.reportFiveHundred();
       })
   }
 
@@ -174,12 +154,7 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
             )
           })
           .catch(function (error) {
-            $mdDialog.show(
-              $mdDialog.alert()
-                .title('500 Error')
-                .textContent('Something went wrong on our server. We are looking into it, and apologize for the inconvenience')
-                .ok('ok')
-            )
+            self.reportFiveHundred();
           })
       }, function () {
         $mdToast.show(
@@ -212,12 +187,7 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
             )
           })
           .catch(function (error) {
-            $mdDialog.show(
-              $mdDialog.alert()
-                .title('500 Error')
-                .textContent('Something went wrong on our server. We are looking into it, and apologize for the inconvenience')
-                .ok('Ok')
-            )
+            self.reportFiveHundred();
           })
       }, function () {
         $mdToast.show(
@@ -249,12 +219,7 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
             )
           })
           .catch(function (error) {
-            $mdDialog.show(
-              $mdDialog.alert()
-                .title('500 Error')
-                .textContent('Something went wrong on our server. We are looking into it, and apologize for the inconvenience')
-                .ok('ok')
-            )
+            self.reportFiveHundred();
           })
       }, function () {
         $mdToast.show(
@@ -314,12 +279,7 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
         )
       })
       .catch(function (error) {
-        $mdDialog.show(
-          $mdDialog.alert()
-            .title('500 Error')
-            .textContent('Something went wrong on our server. We are looking into it, and apologize for the inconvenience')
-            .ok('Ok')
-        )
+        self.reportFiveHundred();
       })
   }
 
@@ -525,6 +485,15 @@ app.service('ProjectService', ['$http', '$mdDialog', '$mdToast', function ($http
         }
       })
     }
+  }
+
+  self.reportFiveHundred = function () {
+    $mdDialog.show(
+      $mdDialog.alert()
+        .title('500 Error')
+        .textContent('Something went wrong on our server. We are looking into it, and apologize for the inconvenience')
+        .ok('Ok')
+    )
   }
 
 }])
