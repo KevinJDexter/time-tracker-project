@@ -43,3 +43,24 @@ table, th {
 table tr th, table tr td {
   text-align: center;
 }
+
+header {
+  background-color: rgb(85, 85, 255);
+}
+
+table {
+  background-color: rgb(234, 197, 245);
+}
+
+body {
+  background-color: rgb(183, 185, 187);
+}
+
+.nav-div {
+  background-color: rgb(140, 213, 255);
+}
+
+form {
+  padding: 0px 100px;
+  background-color: rgb(190, 190, 190);
+}
